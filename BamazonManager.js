@@ -1,18 +1,18 @@
 
-var Table = require('cli-table');
-var mysql = require('mysql');
-var inquirer = require('inquirer');
+var Table = require("cli-table");
+var mysql = require("mysql");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'Bamazon'
+    host: "localhost",
+    user: "root",
+    password: "1234",
+    database: "Bamazon"
 });
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log('connected as id' + connection.threadId);
+    console.log("connected as id" + connection.threadId);
     appStart();
 });
 
@@ -74,11 +74,11 @@ var appStart = function() {
             var DeptName = response.dept;
             var Price = response.price;
             var Quantity = response.Qty;
-            connection.query('INSERT INTO Products (Item, DeptName, Price, Quantity) VALUES (?, ?, ?, ?)', [Item, DeptName, Price, Quantity], function(err, data) {
+            connection.query("INSERT INTO Products (Item, DeptName, Price, Quantity) VALUES (?, ?, ?, ?)", [Item, DeptName, Price, Quantity], function(err, data) {
                 if (err) {
                     throw err;
                 } else {
-                console.log("\nProduct: ' + Item + ' added successfully!\n\n");
+                console.log("\nProduct: " + Item + " added successfully!\n\n");
                 restart();
                 }
             });
@@ -86,10 +86,10 @@ var appStart = function() {
     }
 
         function addInventory() {
-        connection.query('SELECT * FROM Products', function(err, response) {
+        connection.query("SELECT * FROM Products", function(err, response) {
     
             var table = new Table({
-                head: ['ItemID', 'Product Name', 'Price ($)', 'Quantity'],
+                head: ["ItemID", "Product Name", "Price ($)", "Quantity"],
                 colWidths: [12, 30, 12, 12]
             });
         for (var i=0; i < response.length; i++) {
@@ -104,9 +104,9 @@ var appStart = function() {
                 type:"input",
                 message: "Enter the ID of the Product you want to increase the inventory of \n"
             }, {
-                name: 'Qty',
-                type:'input',
-                message: 'Enter the quantity you want to add to inventory'
+                name: "Qty",
+                type:"input",
+                message: "Enter the quantity you want to add to inventory"
             }]).then(function(response) {
                 var addAmount = (parseInt(response.Qty));
     
@@ -114,29 +114,29 @@ var appStart = function() {
                             if(err) {
                                 throw err;
                             } else {
-                            var newQty = (parseInt(response[0].Quantity) + addAmount);                      
-                            }
+                            var newQty = (parseInt(response[0].Quantity) + addAmount);
     
-                    connection.query('UPDATE products SET Quantity = ? WHERE ItemID = ?', [newQty, response.ItemID], function(err, results) {
+                    connection.query("UPDATE Products SET Quantity= ? WHERE ItemID = ?", [newQty, response[0].ItemID], function(err, results) {
                             if(err) {
                                 throw err;
                             } else {
-                            console.log('New Inventory Added!\n');
+                            console.log("New Inventory Added!\n");
                             restart();                      
                             }
-                    });
+                        });
+                      }
                 });        
         });
     }
 
 
     function Sale() {
-    connection.query('SELECT * FROM Products', function(err, response) {
+    connection.query("SELECT * FROM Products", function(err, response) {
         console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
-        console.log('Bamazon Current Inventory');
+        console.log("Bamazon Current Inventory");
         console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
             var table = new Table({
-                head: ['ItemID', 'Product Name', 'Price ($)', 'Quantity'],
+                head: ["ItemID", "Product Name", "Price ($)", "Quantity"],
                 colWidths: [5, 35, 15, 10]
             });
         for (var i=0; i < response.length; i++) {
@@ -149,13 +149,13 @@ var appStart = function() {
     }
     
     function lowInventory() {
-    connection.query('SELECT * FROM Products', function(err, response) {
+    connection.query("SELECT * FROM Products", function(err, response) {
         console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
         console.log("View Low Inventory");
         console.log("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=");
     
             var table = new Table({
-                head: ['ItemID', 'Product Name', 'Price ($)', 'Quantity'],
+                head: ["ItemID", "Product Name", "Price ($)", "Quantity"],
                 colWidths: [5, 35, 15, 8]
             });
         for (var i=0; i < response.length; i++) {
@@ -185,4 +185,3 @@ var appStart = function() {
             }); 
     };
        
-
